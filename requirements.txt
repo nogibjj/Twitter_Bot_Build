@@ -1,0 +1,16 @@
+boto3
+pylint
+click
+pytest
+pytest-cov
+fastapi
+requests
+openai
+python-youtube
+tweepy
+pandas
+numpy
+databricks
+databricks-cli
+databricks-connect==10.4.*
+databricks-sql-connector
