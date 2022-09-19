@@ -1,6 +1,14 @@
 # Twitter_Bot_Build
 This depository is built as a Twitter bot to search recent Twitter, analyze tweets, sort accounts with specific conditions, and send messages. 
 
+This project has five steps:
+1. Build Searching bot to find recently twits with key words
+2. Build Analysis function for searching result (Finance related information, social media, NLP)
+3. Build a sort function for twits, using Twits information to sort users.
+4. Build function for sending direct message for the specific users.
+5. Round up project to use cloud service to run the bot automatically.
+
+
 ## 1. Searching Twitter
 The first step of this project is searching for tweets containing particular keywords.  And save it as a CSV file into AWS S3.
 Before we dive into the code, there are a few things we need to finish the setup:
