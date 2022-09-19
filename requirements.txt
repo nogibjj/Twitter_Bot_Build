@@ -14,3 +14,7 @@ databricks
 databricks-cli
 databricks-connect==10.4.*
 databricks-sql-connector
+os
+boto3
+s3fs
+fsspec

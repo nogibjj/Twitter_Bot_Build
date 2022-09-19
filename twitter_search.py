@@ -1,11 +1,8 @@
 import tweepy
 import keys
 import pandas as pd
-# from databricks import sql
-# import os
-# with sql.connect(server_hostname = os.getenv('DATABRICKS_HOST'),
-#                  http_path = os.getenv('DATABRICKS_HTTP_PATH'),
-#                  access_token = os.getenv('DATABRICKS_TOKEN')) as db:
+import boto3
+from botocore.exceptions import NoCredentialsError
 
 
 consumer_key = keys.consumer_key
@@ -25,23 +22,15 @@ getClient = tweepy.Client(bearer_token=Bearer_Token,
                           access_token_secret=Token_Secret)
 client = getClient
 
-# search for tweets with the word crypto
-# query = "Crypto"
-# start_time = '2022-09-8T22:00:00Z'
-# end_time = "2022-09-14T22:00:00Z"
-# max_result = 50
 
-# write a function get all the tweets for a given user
-
-
-def getTweet(client, id):
+# write a function that gets the tweet with the tweet id
+def getTweet(id_twitter):
     tweet = client.get_tweets(
-        id, expansions=['author_id'], user_fields=['username'])
+        id_twitter, expansions=['author_id'], user_fields=['username'])
     return tweet
 
+
 # write a function that searches twitter with key words and returns the tweets with user id of the user who tweeted it
-
-
 def searchTweets(query, max_results):
     tweets = client.search_recent_tweets(query=query,
                                          tweet_fields=[
@@ -57,9 +46,8 @@ def searchTweets(query, max_results):
 
     results = []
     if not tweets.data is None and len(tweets.data) > 0:
-        # print(tweets.data)
         for tweet in tweets.data:
-            twt = getTweet(client, tweet['id'])
+            twt = getTweet(tweet['id'])
             obj = {}
             obj['author_id'] = tweet.id
             obj['text'] = tweet.text
@@ -80,10 +68,12 @@ def searchTweets(query, max_results):
     else:
         return "No tweets found"
 
-    df = pd.DataFrame(results)
-    df.to_csv('tweets.csv')
-    # print(df.head())
+    search_df = pd.DataFrame(results)
+
+    # save the dataframe to s3
+    search_df.to_csv("s3://projecttwitterbot/Searching/search_df.csv",
+                     storage_options={'key': keys.access_key, 'secret': keys.secret_access_key})
 
 
 if __name__ == '__main__':
-    searchTweets('crypto', 10)
+    searchTweets('crypto', 50)
